@@ -48,12 +48,31 @@ public class DenseMatrix implements Matrix {
 
     @Override
     public Matrix multiply(Matrix matrix) {
-        return null;
+        if (getWidth() != matrix.getHeight())
+            throw new NonMultiplicativeMatricesException();
+        var result = new DenseMatrix(getHeight(), matrix.getWidth());
+        for (int i = 0; i < getHeight(); ++i) {
+            for (int j = 0; j < matrix.getWidth(); ++j)
+            {
+                for (int k = 0; k < getWidth(); ++k) {
+                    result.setElement(i, j, result.getElement(i, j) + getElement(i, k) * matrix.getElement(k, j));
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
     public Matrix Transposition() {
-        return null;
+        var newMatrix = new DenseMatrix(getWidth(), getHeight());
+        for (int i = 0; i < getWidth(); ++i) {
+            for (int j = 0; j < getHeight(); ++j) {
+                newMatrix.setElement(i, j, getElement(j, i));
+            }
+        }
+
+        return newMatrix;
     }
 
     @Override
@@ -74,6 +93,11 @@ public class DenseMatrix implements Matrix {
     @Override
     public Double getElement(int i, int j) {
         return matrixList.get(i).get(j);
+    }
+
+    @Override
+    public void setElement(int i, int j, Double value) {
+        matrixList.get(i).set(j, value);
     }
 
     @Override
@@ -99,13 +123,26 @@ public class DenseMatrix implements Matrix {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof DenseMatrix)
-        {
+        if (obj instanceof DenseMatrix) {
             if (this == obj)
                 return true;
             if (this.hashCode != ((DenseMatrix) obj).hashCode)
                 return false;
             return this.matrixList.equals(((DenseMatrix) obj).getList());
+        }
+        else if (obj instanceof Matrix matrix) {
+            if (matrix.getHeight() != getHeight() || matrix.getWidth() != getWidth())
+                return false;
+            for (int i = 0; i < getHeight(); ++i) {
+                for (int j = 0; j < getWidth(); ++j) {
+                    if (!matrix.getElement(i,j).equals(getElement(i, j)))
+                    {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
         }
         else return false;
     }
