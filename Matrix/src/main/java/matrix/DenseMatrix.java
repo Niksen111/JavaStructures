@@ -1,7 +1,13 @@
 package matrix;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 * Dense matrix
@@ -46,8 +52,38 @@ public class DenseMatrix implements Matrix {
         hashCode = this.matrixList.hashCode();
     }
 
+    /**
+     * Creates a matrix from a given file.
+     * @param fileName path to file.
+     */
+    public DenseMatrix(String fileName) throws IOException {
+        var reader = new BufferedReader(new FileReader(fileName));
+        String line = reader.readLine();
+        int width = 0;
+        if (line != null) {
+            width = line.split(" ").length;
+        }
+        while (line != null) {
+            List<Double> buffer =
+                    Arrays.stream(line.split(" "))
+                            .mapToDouble(Double::parseDouble)
+                            .boxed()
+                            .collect(Collectors.toList());
+
+            if (width != buffer.size()) {
+                this.matrixList = null;
+                throw new IOException("Incorrect format of the matrix in the file");
+            }
+
+            this.matrixList.add(buffer);
+            line = reader.readLine();
+        }
+
+        hashCode = this.matrixList.hashCode();
+    }
+
     @Override
-    public Matrix multiply(Matrix matrix) {
+    public Matrix multiply(Matrix matrix) throws NonMultiplicativeMatricesException {
         if (getWidth() != matrix.getHeight())
             throw new NonMultiplicativeMatricesException();
         var result = new DenseMatrix(getHeight(), matrix.getWidth());

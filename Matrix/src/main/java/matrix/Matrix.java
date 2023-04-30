@@ -11,7 +11,7 @@ public interface Matrix {
      * @param matrix matrix by which the initial matrix will be multiplied from the right.
      * @return result of multiplication.
      */
-    Matrix multiply(Matrix matrix);
+    Matrix multiply(Matrix matrix) throws NonMultiplicativeMatricesException;
 
     /**
      * @return transposed matrix.

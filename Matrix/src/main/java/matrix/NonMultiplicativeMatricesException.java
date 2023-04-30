@@ -1,4 +1,6 @@
 package matrix;
 
-public class NonMultiplicativeMatricesException extends IllegalArgumentException {
+import java.io.IOException;
+
+public class NonMultiplicativeMatricesException extends IOException {
 }
