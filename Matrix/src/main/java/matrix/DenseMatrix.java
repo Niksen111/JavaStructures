@@ -79,6 +79,10 @@ public class DenseMatrix implements Matrix {
             line = reader.readLine();
         }
 
+        if (getHeight() == 0 || getWidth() == 0)
+        {
+            throw new IOException("Incorrect matrix.");
+        }
         hashCode = this.matrixList.hashCode();
     }
 
@@ -159,27 +163,24 @@ public class DenseMatrix implements Matrix {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof DenseMatrix) {
-            if (this == obj)
-                return true;
-            if (this.hashCode != ((DenseMatrix) obj).hashCode)
-                return false;
-            return this.matrixList.equals(((DenseMatrix) obj).getList());
+        if (obj == this)
+        {
+            return true;
         }
-        else if (obj instanceof Matrix matrix) {
+        if (obj instanceof Matrix matrix) {
             if (matrix.getHeight() != getHeight() || matrix.getWidth() != getWidth())
                 return false;
             for (int i = 0; i < getHeight(); ++i) {
                 for (int j = 0; j < getWidth(); ++j) {
-                    if (!matrix.getElement(i,j).equals(getElement(i, j)))
-                    {
+                    if (!matrix.getElement(i, j).equals(getElement(i, j))) {
                         return false;
                     }
                 }
             }
-            
+
             return true;
         }
-        else return false;
+
+        return false;
     }
 }

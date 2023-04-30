@@ -1,6 +1,7 @@
 package matrix;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,32 +30,7 @@ class DenseMatrixTest {
         try {
             Matrix m1 = new DenseMatrix("m.txt");
             Matrix m2 = new DenseMatrix("m2.txt");
-            Matrix expected = new DenseMatrix("empty.txt");
-            assertEquals(expected, m1.multiply(m2));
-        } catch (IOException e) {
-            fail();
-        }
-    }
-    @Test
-    public void multiplyDE() throws RuntimeException {
-        try {
-            Matrix m1 = new DenseMatrix("m1.txt");
-            Matrix m2 = new DenseMatrix("empty.txt");
-            Matrix expected = new DenseMatrix("m1.txt");
-            assertEquals(expected, m1.multiply(m2));
-        } catch (IOException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void multiplyED()
-    {
-        try {
-            Matrix m1 = new DenseMatrix("empty.txt");
-            Matrix m2 = new DenseMatrix("m2.txt");
-            Matrix expected = new DenseMatrix("m2.txt");
-            assertEquals(expected, m1.multiply(m2));
+            assertThrows(NonMultiplicativeMatricesException.class, () -> m1.multiply(m2));
         } catch (IOException e) {
             fail();
         }
@@ -69,7 +45,7 @@ class DenseMatrixTest {
             Matrix expected = new DenseMatrix("empty.txt");
             assertEquals(expected, m1.multiply(m2));
         } catch (IOException e) {
-            fail();
+            assertTrue("Incorrect matrix.".equals(e.getMessage()));
         }
     }
 
@@ -95,20 +71,6 @@ class DenseMatrixTest {
         }
         Matrix expected = new DenseMatrix(list);
 
-        assertEquals(expected, m);
-    }
-
-    @Test
-    public void readEmptyDenseMatrix()
-    {
-        Matrix m = null;
-        try {
-            m = new DenseMatrix("empty.txt");
-        } catch (IOException e) {
-            fail();
-        }
-        List<List<Double>> list = new ArrayList<>();
-        Matrix expected = new DenseMatrix(list);
         assertEquals(expected, m);
     }
 }
